@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/widgets/error_retry_view.dart';
 import '../../../../core/widgets/post_image.dart';
 import '../../../../domain/entities/post.dart';
+import '../../bookmark/view/bookmark_button.dart';
 import '../bloc/post_bloc.dart';
 import '../bloc/post_event.dart';
 import '../bloc/post_state.dart';
@@ -170,7 +171,13 @@ class _PostTile extends StatelessWidget {
       ),
       title: Text(post.title, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text('${post.author.name} (@${post.author.username})'),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BookmarkButton(postId: post.id),
+          const Icon(Icons.chevron_right),
+        ],
+      ),
       onTap: () => context.push('/post/${post.id}', extra: post),
     );
   }

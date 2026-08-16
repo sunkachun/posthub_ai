@@ -5,6 +5,7 @@ import '../../../../core/widgets/error_retry_view.dart';
 import '../../../../core/widgets/post_image.dart';
 import '../../../../domain/entities/comment.dart';
 import '../../../../domain/entities/post.dart';
+import '../../bookmark/view/bookmark_button.dart';
 import '../bloc/post_bloc.dart';
 import '../bloc/post_event.dart';
 import '../bloc/post_state.dart';
@@ -34,7 +35,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         : '?';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Post')),
+      appBar: AppBar(
+        title: const Text('Post'),
+        actions: [BookmarkButton(postId: post.id)],
+      ),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
