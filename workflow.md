@@ -16,11 +16,11 @@ with tests mirroring the source layout under `test/`.
 posthub_by_ai/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                          # GitHub Actions CI (analyze + test)
-│       └── release.yml                     # GitHub Release
+│       ├── ci.yml                          # GitHub Actions CI (analyze + test)
+│       └── release.yml                     # GitHub Actions CD (build + release APK)
 ├── lib/
 │   ├── main.dart                           # Composition root (DI)
-│   ├── app.dart                            # MaterialApp.router + BlocProvider
+│   ├── app.dart                            # MaterialApp.router + MultiBlocProvider
 │   ├── core/                               # Shared infrastructure
 │   │   ├── errors/
 │   │   │   └── server_exception.dart       # Custom ServerException
@@ -35,6 +35,7 @@ posthub_by_ai/
 │   │   │   ├── post.dart                   # PostEntity (+ imageUrl getter)
 │   │   │   └── user.dart                   # UserEntity
 │   │   └── repositories/
+│   │       ├── bookmark_repository.dart    # Abstract BookmarkRepository contract
 │   │       └── post_repository.dart        # Abstract PostRepository contract
 │   ├── data/                               # ★ DATA LAYER (DTOs, sources, impls)
 │   │   ├── datasources/
@@ -46,9 +47,17 @@ posthub_by_ai/
 │   │   │   └── user_dto.dart               # UserDto.fromJson/toEntity
 │   │   └── repositories/
 │   │       ├── api_post_repository_impl.dart   # Real API + N+1 resolution
+│   │       ├── bookmark_repository_impl.dart   # SharedPreferences bookmarks
 │   │       └── mock_post_repository_impl.dart  # Mock-first implementation
 │   └── presentation/                       # ★ PRESENTATION LAYER (BLoC + Views)
 │       └── features/
+│           ├── bookmark/
+│           │   ├── bloc/
+│           │   │   ├── bookmark_bloc.dart  # BookmarkBloc (load/toggle)
+│           │   │   ├── bookmark_event.dart # LoadBookmarks/ToggleBookmark
+│           │   │   └── bookmark_state.dart # bookmarkedIds (Set<int>)
+│           │   └── view/
+│           │       └── bookmark_button.dart
 │           └── post/
 │               ├── bloc/
 │               │   ├── post_bloc.dart      # PostBloc (events → states)
@@ -114,6 +123,19 @@ working, testable state.
 - Pushing a tag matching `v*` (e.g., `v1.0.1`) triggers a `build-and-release` job
   that builds a release APK (`flutter build apk --release`) and attaches it to a
   GitHub Release for easy download.
+- The job grants `contents: write` permissions and uses Java 17 (`zulu`) via
+  `actions/setup-java@v5`.
+
+### Phase 4.6 — Local Bookmarks (SharedPreferences)
+- Added the `BookmarkRepository` abstraction (domain) and its
+  `BookmarkRepositoryImpl` (data), persisting post IDs as a `String` list under
+  the `bookmarked_posts` key.
+- Introduced `BookmarkBloc` with `LoadBookmarks` and `ToggleBookmark(int postId)`,
+  holding a `Set<int> bookmarkedIds`.
+- Updated `main.dart` to await `SharedPreferences.getInstance()` and `app.dart` to
+  provide both blocs via `MultiBlocProvider`, triggering `LoadBookmarks` on init.
+- Wired a `BookmarkButton` (filled/outlined bookmark icon) into the post list
+  tiles and the detail screen AppBar.
 
 ### Phase 5 — Documentation & Tag Release
 - Authored `README.md` (project overview, stack, features, run/test commands) and
