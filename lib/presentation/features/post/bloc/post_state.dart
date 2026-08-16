@@ -10,7 +10,7 @@ class PostState extends Equatable {
     this.posts = const [],
     this.status = PostStatus.initial,
     this.isLoadingMore = false,
-    this.hasReachedMax = false,
+    this.hasMore = true,
     this.errorMessage,
     this.comments = const [],
     this.commentsStatus = PostStatus.initial,
@@ -20,7 +20,7 @@ class PostState extends Equatable {
   final List<PostEntity> posts;
   final PostStatus status;
   final bool isLoadingMore;
-  final bool hasReachedMax;
+  final bool hasMore;
   final String? errorMessage;
 
   final List<CommentEntity> comments;
@@ -31,7 +31,7 @@ class PostState extends Equatable {
     List<PostEntity>? posts,
     PostStatus? status,
     bool? isLoadingMore,
-    bool? hasReachedMax,
+    bool? hasMore,
     String? errorMessage,
     List<CommentEntity>? comments,
     PostStatus? commentsStatus,
@@ -41,7 +41,7 @@ class PostState extends Equatable {
       posts: posts ?? this.posts,
       status: status ?? this.status,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      hasMore: hasMore ?? this.hasMore,
       errorMessage: errorMessage ?? this.errorMessage,
       comments: comments ?? this.comments,
       commentsStatus: commentsStatus ?? this.commentsStatus,
@@ -54,7 +54,7 @@ class PostState extends Equatable {
         posts,
         status,
         isLoadingMore,
-        hasReachedMax,
+        hasMore,
         errorMessage,
         comments,
         commentsStatus,

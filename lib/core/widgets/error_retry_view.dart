@@ -5,10 +5,12 @@ class ErrorRetryView extends StatelessWidget {
     super.key,
     required this.message,
     required this.onRetry,
+    this.icon = Icons.cloud_off_rounded,
   });
 
   final String message;
   final VoidCallback onRetry;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,15 @@ class ErrorRetryView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message, textAlign: TextAlign.center),
+            Icon(icon, size: 48, color: Theme.of(context).colorScheme.outline),
             const SizedBox(height: 12),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
+            Text(message, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+            ),
           ],
         ),
       ),

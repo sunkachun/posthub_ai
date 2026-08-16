@@ -16,11 +16,11 @@ class MockPostRepositoryImpl implements PostRepository {
   final MockPostDataSource _dataSource;
 
   @override
-  Future<List<PostEntity>> fetchPosts({int page = 1, int limit = 10}) async {
+  Future<List<PostEntity>> fetchPosts({int page = 1, int pageSize = 10}) async {
     final allPosts = _parsePosts(await _dataSource.fetchPostsJson());
 
-    final start = (page - 1) * limit;
-    final pagePosts = allPosts.skip(start).take(limit).toList();
+    final start = (page - 1) * pageSize;
+    final pagePosts = allPosts.skip(start).take(pageSize).toList();
     if (pagePosts.isEmpty) return const [];
 
     return _attachAuthors(pagePosts);

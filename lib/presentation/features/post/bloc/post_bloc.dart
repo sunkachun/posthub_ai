@@ -25,12 +25,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     _page = 1;
     emit(state.copyWith(status: PostStatus.loading));
     try {
-      final posts = await _repository.fetchPosts(page: _page, limit: _pageSize);
+      final posts =
+          await _repository.fetchPosts(page: _page, pageSize: _pageSize);
       emit(
         state.copyWith(
           status: PostStatus.success,
           posts: posts,
-          hasReachedMax: posts.length < _pageSize,
+          hasMore: posts.length >= _pageSize,
         ),
       );
     } catch (_) {
@@ -47,7 +48,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     PostLoadMore event,
     Emitter<PostState> emit,
   ) async {
-    if (state.hasReachedMax ||
+    if (!state.hasMore ||
         state.isLoadingMore ||
         state.status != PostStatus.success) {
       return;
@@ -56,12 +57,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     emit(state.copyWith(isLoadingMore: true));
     _page++;
     try {
-      final posts = await _repository.fetchPosts(page: _page, limit: _pageSize);
+      final posts =
+          await _repository.fetchPosts(page: _page, pageSize: _pageSize);
       emit(
         state.copyWith(
           isLoadingMore: false,
           posts: [...state.posts, ...posts],
-          hasReachedMax: posts.length < _pageSize,
+          hasMore: posts.length >= _pageSize,
         ),
       );
     } catch (_) {
