@@ -17,6 +17,8 @@ class PostEntity extends Equatable {
   final String body;
   final UserEntity author;
 
+  String get imageUrl => 'https://picsum.photos/seed/$id/200/150';
+
   @override
   List<Object?> get props => [id, userId, title, body, author];
 }
