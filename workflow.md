@@ -17,6 +17,7 @@ posthub_by_ai/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                          # GitHub Actions CI (analyze + test)
+│       └── release.yml                     # GitHub Release
 ├── lib/
 │   ├── main.dart                           # Composition root (DI)
 │   ├── app.dart                            # MaterialApp.router + BlocProvider
@@ -107,6 +108,12 @@ working, testable state.
   on every push and pull request to `main` (Ubuntu, Flutter stable).
 - Wrote unit tests for JSON parsing, N+1 mapping, BLoC transitions, and a widget
   smoke test.
+
+### Phase 4.5 — Continuous Deployment (CD)
+- Added `.github/workflows/release.yml` for automated releases.
+- Pushing a tag matching `v*` (e.g., `v1.0.1`) triggers a `build-and-release` job
+  that builds a release APK (`flutter build apk --release`) and attaches it to a
+  GitHub Release for easy download.
 
 ### Phase 5 — Documentation & Tag Release
 - Authored `README.md` (project overview, stack, features, run/test commands) and
